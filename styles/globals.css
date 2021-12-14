@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: cursive;
+  background: rgb(228, 217, 222);
+}
