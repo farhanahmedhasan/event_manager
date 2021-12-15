@@ -1,26 +1,20 @@
 import Link from 'next/link';
+import { getAllEvents } from '../../data/dummy_data';
+import EventList from '../../components/events/EventList';
+import Heading from '../../components/ui/Heading';
+import EventSearch from '../../components/events/EventSearch';
 
 const AllEventsPage = () => {
+  const events = getAllEvents();
+
   return (
-    <div>
-      <h1 className='text-6xl flex  justify-center'>All Events</h1>
-      <ul>
-        <li>
-          <Link href={`events/1`}>awesome</Link>
-        </li>
-        <li>
-          <Link href={`events/2`}>sgeg</Link>
-        </li>
-        <li>
-          <Link href={`events/3`}>sdfgsgsg</Link>
-        </li>
-        <li>
-          <Link href={`events/4`}>sdfgsdg</Link>
-        </li>
-        <li>
-          <Link href={`events/5`}>sdgsdgs</Link>
-        </li>
-      </ul>
+    <div className='container pb-12'>
+      <EventSearch />
+      <Heading title='All The Events' big={true} center={true} />
+      <EventList
+        items={events}
+        className='grid sm:gap-y-12 lg:grid-cols-1 xl:grid-cols-2 xl:gap-x-8 place-items-center items-start'
+      />
     </div>
   );
 };
