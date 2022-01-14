@@ -7,7 +7,7 @@ const Button = (props) => {
         <a
           className={`${
             props.arrow && 'flex items-center'
-          }  text-pink-900 bg-pink-400 py-2 px-8 rounded-full hover:underline`}
+          }  inline-block text-pink-900 bg-pink-400 py-2 px-8 rounded-full hover:underline ${props.className}`}
         >
           {props.children}
         </a>

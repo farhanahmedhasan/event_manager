@@ -1,25 +1,38 @@
-import { useRouter } from 'next/router';
+import Image from 'next/image';
+import Head from 'next/head';
 
-import { getEventById } from '../../data/dummy_data';
+import { getEventById, getFeaturedEvents } from '../../helper/api-util';
 import Heading from '../../components/ui/Heading';
 import EventDate from '../../components/eventDetails/EventDate';
 import EventAddress from '../../components/eventDetails/EventAddress';
 
-const EventDetailsPage = () => {
-  const router = useRouter();
-  const { event_id } = router.query;
-  const event = getEventById(event_id);
-
+const EventDetailsPage = ({ event }) => {
   if (!event) {
-    return <p>Event not found</p>;
+    return (
+      <div className='text-center'>
+        <h1 className='text-4xl font-bold'>Loading...</h1>
+      </div>
+    );
   }
 
   return (
     <>
+      <Head>
+        <title>{event.title}</title>
+        <meta name='description' content={event.description} />
+      </Head>
       <div className='bg-white container space-x-8 my-6 p-12 rounded-lg flex items-center'>
-        <div className='h-[520px] basis-1/3'>
-          {/*eslint-disable-next-line @next/next/no-img-element */}
-          <img className='h-full w-full object-cover' src={'/' + event.image} alt={event.title} />
+        <div className=' overflow-hidden basis-1/3'>
+          <Image
+            blurDataURL='/images/blur.jpg'
+            placeholder='blur'
+            src={'/' + event.image}
+            alt={event.title}
+            objectFit='cover'
+            height={320}
+            width={220}
+            layout='responsive'
+          />
         </div>
 
         <div className='basis-2/3'>
@@ -35,3 +48,26 @@ const EventDetailsPage = () => {
   );
 };
 export default EventDetailsPage;
+
+export const getStaticProps = async (context) => {
+  const { event_id } = context.params;
+  const event = await getEventById(event_id);
+
+  return {
+    props: {
+      event,
+    },
+    revalidate: 30, // 30 seconds
+  };
+};
+
+export const getStaticPaths = async () => {
+  const allEvents = await getFeaturedEvents();
+
+  const paths = allEvents.map((event) => ({ params: { event_id: event.id } }));
+
+  return {
+    paths,
+    fallback: true,
+  };
+};
