@@ -1,9 +1,11 @@
+import Head from 'next/head';
 import { useRouter } from 'next/router';
+
 import { getAllEvents } from '../../helper/api-util';
+
 import EventList from '../../components/events/EventList';
 import Heading from '../../components/ui/Heading';
 import EventSearch from '../../components/events/EventSearch';
-import Head from 'next/head';
 
 const AllEventsPage = ({ events }) => {
   const router = useRouter();

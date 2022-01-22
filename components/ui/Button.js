@@ -17,6 +17,9 @@ const Button = (props) => {
 
   return (
     <button
+      style={props.style}
+      type={props.type}
+      onClick={props.onClick}
       className={`${
         props.arrow && 'flex items-center'
       }  text-pink-900 bg-pink-400 py-2 px-8 rounded-full hover:underline ${props.className}`}

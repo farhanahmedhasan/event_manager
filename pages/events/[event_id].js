@@ -5,6 +5,7 @@ import { getEventById, getFeaturedEvents } from '../../helper/api-util';
 import Heading from '../../components/ui/Heading';
 import EventDate from '../../components/eventDetails/EventDate';
 import EventAddress from '../../components/eventDetails/EventAddress';
+import Comments from '../../components/inputs/Comments';
 
 const EventDetailsPage = ({ event }) => {
   if (!event) {
@@ -21,28 +22,31 @@ const EventDetailsPage = ({ event }) => {
         <title>{event.title}</title>
         <meta name='description' content={event.description} />
       </Head>
-      <div className='bg-white container space-x-8 my-6 p-12 rounded-lg flex items-center'>
-        <div className=' overflow-hidden basis-1/3'>
-          <Image
-            blurDataURL='/images/blur.jpg'
-            placeholder='blur'
-            src={'/' + event.image}
-            alt={event.title}
-            objectFit='cover'
-            height={320}
-            width={220}
-            layout='responsive'
-          />
-        </div>
+      <div className='container bg-white  my-6 p-12 rounded-lg '>
+        <div className='flex items-center space-x-8 mb-16'>
+          <div className=' overflow-hidden basis-1/3'>
+            <Image
+              blurDataURL='/images/blur.jpg'
+              placeholder='blur'
+              src={'/' + event.image}
+              alt={event.title}
+              objectFit='cover'
+              height={320}
+              width={220}
+              layout='responsive'
+            />
+          </div>
 
-        <div className='basis-2/3'>
-          <Heading title={event.title} big={true} />
-          <p className='mb-8'>{event.description}</p>
-          <div className='flex items-center space-x-16'>
-            <EventDate date={event.date} icon={true} />
-            <EventAddress address={event.location} icon={true} mb='mb-0' />
+          <div className='basis-2/3'>
+            <Heading title={event.title} big={true} />
+            <p className='mb-8'>{event.description}</p>
+            <div className='flex items-center space-x-16'>
+              <EventDate date={event.date} icon={true} />
+              <EventAddress address={event.location} icon={true} mb='mb-0' />
+            </div>
           </div>
         </div>
+        <Comments eventId={event.id} />
       </div>
     </>
   );
