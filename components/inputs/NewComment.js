@@ -11,12 +11,34 @@ const NewComment = (props) => {
   const supressEnterPropagation = (e) => {
     const ENTER_KEY_CODE = 13;
     if (e.target.name === 'comment' && (e.key === 'Enter' || e.keyCode === ENTER_KEY_CODE)) {
-      e.stopPropagation();
+      e.preventDefault();
+      const email = emailRef.current.value;
+      const name = nameRef.current.value;
+      const comment = commentRef.current.value;
+
+      if (
+        !email ||
+        email.trim() === '' ||
+        !email.includes('@') ||
+        !name ||
+        name.trim() === '' ||
+        !comment ||
+        comment.trim() === ''
+      ) {
+        setIsInValid(true);
+        return;
+      } else {
+        setIsInValid(false);
+      }
+
+      const commentInfo = { email, name, comment };
+
+      props.addComment(commentInfo);
+      commentRef.current.value = '';
     }
   };
 
   const sendCommentHandler = (e) => {
-    e.stopPropagation();
     e.preventDefault();
 
     const email = emailRef.current.value;

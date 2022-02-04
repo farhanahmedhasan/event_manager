@@ -1,11 +1,19 @@
 import { useRef } from 'react';
 import Button from '../ui/Button';
+import useNotificationContext from '../../store/notificationContext';
 
-const NewsletterReg = (props) => {
+const NewsletterReg = () => {
+  const { showNotification } = useNotificationContext();
   const emailRef = useRef();
 
   const postEmail = async (emailAddress) => {
     try {
+      showNotification({
+        title: 'Signing up...',
+        message: 'Registering your email address...',
+        status: 'pending',
+      });
+
       const res = await fetch('/api/registration', {
         method: 'POST',
         headers: {
@@ -13,18 +21,28 @@ const NewsletterReg = (props) => {
         },
         body: JSON.stringify({ emailAddress }),
       });
-
       const data = await res.json();
 
-      if (!data.message.includes('duplicate')) {
-        props.setMessage(data.message);
+      if (res.status === 500 || !res.ok) {
+        if (data.message.includes('duplicate')) {
+          throw new Error('Email address already registered.');
+        }
+        throw new Error(data.message);
       }
 
-      if (data.message.includes('duplicate')) {
-        props.setMessage('This Email Address is already registered');
+      if (!data.message.includes('duplicate') && res.status === 201) {
+        showNotification({
+          title: 'Success',
+          message: 'You have been successfully registered.',
+          status: 'success',
+        });
       }
     } catch (error) {
-      console.log(error);
+      showNotification({
+        title: 'Error',
+        message: error.message || 'Something went wrong.',
+        status: 'error',
+      });
     }
   };
 

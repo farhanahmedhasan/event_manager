@@ -2,7 +2,6 @@ import { connectToMongoDB } from '../../../lib/dbConnect';
 import Comments from '../../../models/commentsModel';
 
 const commentHandler = async (req, res) => {
-  await connectToMongoDB();
   const { eventId } = req.query;
 
   if (req.method === 'POST') {
@@ -12,15 +11,23 @@ const commentHandler = async (req, res) => {
       return res.status(422).json({ message: 'Please provide Inputs' });
     }
 
-    const newComment = await Comments.create({ eventId, email, name, comment });
+    try {
+      const error = await connectToMongoDB();
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      return res.status(500).json({ message: 'Error connecting to Database!! Please try again later' });
+    }
 
     try {
-      res.status(201).json({
+      const newComment = await Comments.create({ eventId, email, name, comment });
+      return res.status(201).json({
         message: 'Comment added successfully',
         data: newComment,
       });
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         message: 'Something went wrong',
         error,
       });
@@ -29,13 +36,22 @@ const commentHandler = async (req, res) => {
 
   if (req.method === 'GET') {
     try {
+      const error = await connectToMongoDB();
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      return res.status(500).json({ message: 'Error connecting to Database!! Please try again later' });
+    }
+
+    try {
       const comments = await Comments.find({ eventId });
-      res.status(200).json({
+      return res.status(200).json({
         message: 'Comments fetched successfully',
         data: comments,
       });
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         message: 'Something went wrong',
         error,
       });
